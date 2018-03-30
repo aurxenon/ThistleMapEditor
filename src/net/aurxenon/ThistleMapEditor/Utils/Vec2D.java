@@ -16,7 +16,7 @@ public class Vec2D {
         y = 0;
     }
 
-    public TerminalPosition geTerminalPosition() {
+    public TerminalPosition getTerminalPosition() {
         return new TerminalPosition(x, y);
     }
 

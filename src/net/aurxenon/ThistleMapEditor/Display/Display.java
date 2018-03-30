@@ -7,9 +7,6 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
-import net.aurxenon.ThistleMapEditor.Globals;
 import net.aurxenon.ThistleMapEditor.Thistle;
 import net.aurxenon.ThistleMapEditor.Utils.Vec2D;
 
@@ -25,7 +22,6 @@ public class Display {
     public Display() {
         try {
             Thistle.getTerminal().enterPrivateMode();
-            //terminal.setBackgroundColor(TextColor.ANSI.GREEN);
             screen = new TerminalScreen(Thistle.getTerminal());
             screen.startScreen();
             screen.setCursorPosition(null);
@@ -66,7 +62,7 @@ public class Display {
         }
     }
     public void moveCursor(Vec2D cursorPos) {
-        TerminalPosition terminalPosition = new TerminalPosition(cursorPos.getX(), cursorPos.getY());
+        TerminalPosition terminalPosition = cursorPos.getTerminalPosition();
         screen.setCursorPosition(terminalPosition);
         try {
             screen.refresh();

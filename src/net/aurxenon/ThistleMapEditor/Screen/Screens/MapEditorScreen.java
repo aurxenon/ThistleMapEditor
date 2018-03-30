@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class MapEditorScreen extends EditorScreen {
     private Display display;
-    private Vec2D cursorPosition = new Vec2D(2,2);
+    private Vec2D cursorPosition = new Vec2D(0,0);
 
     public MapEditorScreen() {
         super(ScreenType.MAP_EDITOR);
@@ -28,18 +28,18 @@ public class MapEditorScreen extends EditorScreen {
             //for now, the maps are only going to be the size of the terminal
             Thistle.setCamera(new Camera(new Vec2D(0,0), Thistle.getTerminal().getTerminalSize().getColumns(), Thistle.getTerminal().getTerminalSize().getRows(), Thistle.getTerminal().getTerminalSize().getColumns(), Thistle.getTerminal().getTerminalSize().getRows()));
             Thistle.getTerminal().setCursorVisible(true);
+            //render once so the screen isn't blank when it's first created
+            render();
         }catch(IOException e) {
             e.printStackTrace();
         }
-        //display.drawSymbol(new Tile(new Vec2D(0,0)));
     }
 
     @Override
     public void update() {
-        //System.out.println("test");
         KeyStroke key;
         try {
-            key = Thistle.getTerminal().pollInput();
+            key = Thistle.getTerminal().readInput();
             if (key != null) {
                 switch (key.getKeyType()) {
                     case ArrowRight:
@@ -59,7 +59,8 @@ public class MapEditorScreen extends EditorScreen {
                         display.moveCursor(cursorPosition);
                         break;
                     case Enter:
-                        Thistle.addTile(new Tile(cursorPosition));
+                        Vec2D placeDown = new Vec2D(cursorPosition.getX(), cursorPosition.getY());
+                        Thistle.addTile(new Tile(placeDown));
                         break;
                     case Escape:
                         Thistle.getScreenManager().setScreen(new FileScreen());
@@ -75,8 +76,8 @@ public class MapEditorScreen extends EditorScreen {
     public void render() {
         //render is always called before renderUI so there shouldn't be any risks of it clearing the UI or anything
         clearScreen();
-        for (int i = 0; i < Thistle.getTiles().size(); i++) {
-            display.drawSymbol(Thistle.getTiles().get(i));
+        for (Tile tile : Thistle.getTiles()) {
+            display.drawSymbol(tile);
         }
     }
 
@@ -92,7 +93,7 @@ public class MapEditorScreen extends EditorScreen {
 
     @Override
     public void clearScreen() {
-
+        display.clear();
     }
 
     @Override

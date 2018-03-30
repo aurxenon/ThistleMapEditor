@@ -4,15 +4,12 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import net.aurxenon.ThistleMapEditor.Display.ColorString;
 import net.aurxenon.ThistleMapEditor.Display.Display;
-import net.aurxenon.ThistleMapEditor.Display.Tile;
-import net.aurxenon.ThistleMapEditor.Globals;
 import net.aurxenon.ThistleMapEditor.Screen.EditorScreen;
 import net.aurxenon.ThistleMapEditor.Screen.ScreenType;
 import net.aurxenon.ThistleMapEditor.Thistle;
 import net.aurxenon.ThistleMapEditor.Utils.Vec2D;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class MainScreen extends EditorScreen {
     private Display display;

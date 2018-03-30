@@ -38,11 +38,12 @@ public class Thistle {
         }
         screenManager = new ScreenManager();
         screenManager.setScreen(new MainScreen());
-        for (int i = 0; i < 9; i++) {
+        //this is mostly here for testing purposes
+        /*for (int i = 0; i < 9; i++) {
             int x = new Random().nextInt(9);
             int y = new Random().nextInt(9);
             tiles.add(new Tile('%', new Vec2D(x,y)));
-        }
+        }*/
     }
     private static void update() {
         screenManager.update();
