@@ -1,6 +1,9 @@
 package net.aurxenon.ThistleMapEditor.Utils;
 
+import com.googlecode.lanterna.TextColor;
 import net.aurxenon.ThistleMapEditor.Display.Tile;
+import net.aurxenon.ThistleMapEditor.Display.TileType;
+import net.aurxenon.ThistleMapEditor.Thistle;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,6 +13,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class FileManager {
     String filePath;
@@ -17,6 +22,44 @@ public class FileManager {
 
     public FileManager(String filePath) {
         this.filePath = filePath;
+    }
+
+    public FileManager() {}
+
+    public HashMap<String, TileType> extractTileTypes() {
+        try {
+            File input;
+            //very hacky but it manages to get the directory the program is running in
+            if (!new File(new File("").getAbsolutePath() + "\\TileType.xml").exists()) {
+                input = new File(new File("").getAbsolutePath() + "\\TileType.xml");
+                input.createNewFile();
+            } else {
+                input = new File(new File("").getAbsolutePath() + "\\TileType.xml");
+            }
+            doc = Jsoup.parse(input, "UTF-8");
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+        HashMap<String, TileType> tileTypeList = new HashMap<>();
+        Elements mapTiles = doc.getElementsByTag("tiletype");
+        for (Element mapTile : mapTiles) {
+            String name = mapTile.text();
+
+            char label = mapTile.attr("label").charAt(0);
+
+            int foregroundR = Integer.parseInt(mapTile.attr("foregroundR"));
+            int foregroundG = Integer.parseInt(mapTile.attr("foregroundG"));
+            int foregroundB = Integer.parseInt(mapTile.attr("foregroundB"));
+            TextColor foregroundColor = new TextColor.RGB(foregroundR, foregroundG, foregroundB);
+
+            int backgroundR = Integer.parseInt(mapTile.attr("backgroundR"));
+            int backgroundG = Integer.parseInt(mapTile.attr("backgroundG"));
+            int backgroundB = Integer.parseInt(mapTile.attr("backgroundB"));
+
+            TextColor backgroundColor = new TextColor.RGB(backgroundR, backgroundG, backgroundB);
+            tileTypeList.put(name, new TileType(name, label, foregroundColor, backgroundColor));
+        }
+        return tileTypeList;
     }
 
     public ArrayList<Tile> extractTiles() {
@@ -27,13 +70,12 @@ public class FileManager {
             e.printStackTrace();
         }
         ArrayList<Tile> tileList = new ArrayList<Tile>();
-        Element mapTileList = doc.getElementById("tiles");
         Elements mapTiles = doc.getElementsByTag("tile");
         for (Element mapTile : mapTiles) {
-            char label = mapTile.text().charAt(0);
+            String name = mapTile.text();
             int x = Integer.parseInt(mapTile.attr("x"));
             int y = Integer.parseInt(mapTile.attr("y"));
-            tileList.add(new Tile(label, new Vec2D(x,y)));
+            tileList.add(new Tile(Thistle.getTileTypes().get(name), new Vec2D(x,y)));
         }
         return tileList;
     }
@@ -51,7 +93,7 @@ public class FileManager {
             for (Tile tile : tileList) {
                 Element mapTile = new Element("tile");
                 mapTile.appendTo(tiles);
-                mapTile.text(Character.toString(tile.getLabel()));
+                mapTile.text(tile.getTileType().getName());
                 mapTile.attr("x", Integer.toString(tile.getLocation().getX()));
                 mapTile.attr("y", Integer.toString(tile.getLocation().getY()));
             }

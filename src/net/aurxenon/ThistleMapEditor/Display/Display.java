@@ -16,8 +16,8 @@ public class Display {
     private Screen screen;
     private TerminalSize terminalSize;
 
-    int columns;
-    int rows;
+    private int columns;
+    private int rows;
 
     public Display() {
         try {
@@ -36,9 +36,9 @@ public class Display {
 
     public void drawSymbol(Tile tile) {
         try {
-            TextColor textColor = tile.getForegroundColor();
-            TextColor backgroundColor = tile.getBackgroundColor();
-            TextCharacter drawCharacter = new TextCharacter(tile.getLabel(), textColor, backgroundColor);
+            TextColor textColor = tile.getTileType().getForegroundColor();
+            TextColor backgroundColor = tile.getTileType().getBackgroundColor();
+            TextCharacter drawCharacter = new TextCharacter(tile.getTileType().getLabel(), textColor, backgroundColor);
             Vec2D tileLocation = Thistle.getCamera().getCameraCoords(tile);
 
             screen.setCharacter(tileLocation.getX(), tileLocation.getY(), drawCharacter);

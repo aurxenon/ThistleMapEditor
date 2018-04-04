@@ -4,17 +4,20 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import net.aurxenon.ThistleMapEditor.Display.Camera;
 import net.aurxenon.ThistleMapEditor.Display.Tile;
+import net.aurxenon.ThistleMapEditor.Display.TileType;
 import net.aurxenon.ThistleMapEditor.Screen.ScreenManager;
 import net.aurxenon.ThistleMapEditor.Screen.Screens.MainScreen;
-import net.aurxenon.ThistleMapEditor.Utils.Vec2D;
+import net.aurxenon.ThistleMapEditor.Utils.FileManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Thistle {
     private static ScreenManager screenManager;
-    private static ArrayList<Tile> tiles = new ArrayList<Tile>();
+    private static ArrayList<Tile> tiles = new ArrayList<>();
+    private static HashMap<String, TileType> tileTypeList = new HashMap<>();
     private static Camera camera;
     private static Terminal terminal;
 
@@ -32,7 +35,8 @@ public class Thistle {
     }
     private static void create() {
         try {
-            terminal  = new DefaultTerminalFactory().createTerminal();
+            tileTypeList = new FileManager().extractTileTypes();
+            terminal = new DefaultTerminalFactory().createTerminal();
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -59,5 +63,6 @@ public class Thistle {
     public static void addTile(Tile tile) {tiles.add(tile);}
     public static ArrayList<Tile> getTiles() {return tiles;}
     public static void setTiles(ArrayList<Tile> tileList) {tiles = tileList;}
+    public static HashMap<String, TileType> getTileTypes() {return tileTypeList;}
     public static Terminal getTerminal() {return terminal;}
 }
