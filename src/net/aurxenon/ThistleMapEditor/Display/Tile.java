@@ -4,7 +4,7 @@ import com.googlecode.lanterna.TextColor;
 import net.aurxenon.ThistleMapEditor.Utils.Vec2D;
 
 public class Tile {
-    private TileType tileType = new TileType("undefined", '?', TextColor.ANSI.RED, TextColor.ANSI.BLUE);
+    private TileType tileType = new TileType("undefined", '?', false, 0.0, 0.0, TextColor.ANSI.RED, TextColor.ANSI.BLUE);
     private Vec2D location;
 
     public Tile(TileType tileType, Vec2D location) {

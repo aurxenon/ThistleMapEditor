@@ -3,6 +3,7 @@ package net.aurxenon.ThistleMapEditor.Screen.Screens;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import net.aurxenon.ThistleMapEditor.Display.Camera;
+import net.aurxenon.ThistleMapEditor.Display.Cursor;
 import net.aurxenon.ThistleMapEditor.Display.Display;
 import net.aurxenon.ThistleMapEditor.Display.Tile;
 import net.aurxenon.ThistleMapEditor.Screen.EditorScreen;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 public class MapEditorScreen extends EditorScreen {
     private Display display;
-    private Vec2D cursorPosition = new Vec2D(0,0);
+    private Cursor cursor;
 
     public MapEditorScreen() {
         super(ScreenType.MAP_EDITOR);
@@ -25,6 +26,7 @@ public class MapEditorScreen extends EditorScreen {
     public void create() {
         display = new Display();
         try {
+            cursor = new Cursor();
             //for now, the maps are only going to be the size of the terminal
             Thistle.setCamera(new Camera(new Vec2D(0,0), Thistle.getTerminal().getTerminalSize().getColumns(), Thistle.getTerminal().getTerminalSize().getRows(), Thistle.getTerminal().getTerminalSize().getColumns(), Thistle.getTerminal().getTerminalSize().getRows()));
             Thistle.getTerminal().setCursorVisible(true);
@@ -43,29 +45,51 @@ public class MapEditorScreen extends EditorScreen {
             if (key != null) {
                 switch (key.getKeyType()) {
                     case ArrowRight:
-                        cursorPosition.setX(cursorPosition.getX() + 1);
-                        display.moveCursor(cursorPosition);
+                        if (cursor.getCursorPos().getX() > Thistle.getCamera().getMaxViewableX()) {
+                            Thistle.getCamera().moveRight(1);
+                            /*System.out.println("Camera Size: " + Thistle.getCamera().getWorldWidth() + "-" + Thistle.getCamera().getWorldHeight());
+                            System.out.println("Camera Position: " + Thistle.getCamera().getPosition().getX() + "-" + Thistle.getCamera().getPosition().getY());*/
+                        } else {
+                            cursor.moveRight(1);
+                        }
                         break;
                     case ArrowLeft:
-                        cursorPosition.setX(cursorPosition.getX() - 1);
-                        display.moveCursor(cursorPosition);
+                        if (cursor.getCursorPos().getX() < Thistle.getCamera().getPosition().getX()) {
+                            Thistle.getCamera().moveLeft(1);
+                            /*System.out.println("Camera Size: " + Thistle.getCamera().getWorldWidth() + "-" + Thistle.getCamera().getWorldHeight());
+                            System.out.println("Camera Position: " + Thistle.getCamera().getPosition().getX() + "-" + Thistle.getCamera().getPosition().getY());*/
+                        } else {
+                            cursor.moveLeft(1);
+                        }
                         break;
                     case ArrowUp:
-                        cursorPosition.setY(cursorPosition.getY() - 1);
-                        display.moveCursor(cursorPosition);
+                        if (cursor.getCursorPos().getY() > Thistle.getCamera().getMaxViewableY()) {
+                            Thistle.getCamera().moveUp(1);
+                            /*System.out.println("Camera Size: " + Thistle.getCamera().getWorldWidth() + "-" + Thistle.getCamera().getWorldHeight());
+                            System.out.println("Camera Position: " + Thistle.getCamera().getPosition().getX() + "-" + Thistle.getCamera().getPosition().getY());*/
+                        } else {
+                            cursor.moveUp(1);
+                        }
                         break;
                     case ArrowDown:
-                        cursorPosition.setY(cursorPosition.getY() + 1);
-                        display.moveCursor(cursorPosition);
+                        if (cursor.getCursorPos().getY() < Thistle.getCamera().getPosition().getY()) {
+                            Thistle.getCamera().moveDown(1);
+                            /*System.out.println("Camera Size: " + Thistle.getCamera().getWorldWidth() + "-" + Thistle.getCamera().getWorldHeight());
+                            System.out.println("Camera Position: " + Thistle.getCamera().getPosition().getX() + "-" + Thistle.getCamera().getPosition().getY());*/
+                        } else {
+                            cursor.moveDown(1);
+                        }
                         break;
                     case Enter:
-                        Vec2D placeDown = new Vec2D(cursorPosition.getX(), cursorPosition.getY());
+                        Vec2D placeDown = new Vec2D(cursor.getCursorPos().getX(), cursor.getCursorPos().getY());
                         Thistle.addTile(new Tile(placeDown));
                         break;
                     case Escape:
                         Thistle.getScreenManager().setScreen(new FileScreen());
                         break;
                 }
+                /*System.out.println("Cursor Camera Position: " + Thistle.getCamera().getCameraCoords(cursor).getX() + "-" + Thistle.getCamera().getCameraCoords(cursor).getY());
+                System.out.println("Cursor Real Position: " + cursor.getCursorPos().getX() + "-" + cursor.getCursorPos().getY());*/
             }
         }catch(IOException e) {
             e.printStackTrace();
@@ -79,6 +103,7 @@ public class MapEditorScreen extends EditorScreen {
         for (Tile tile : Thistle.getTiles()) {
             display.drawSymbol(tile);
         }
+        display.drawCursor(cursor);
     }
 
     @Override

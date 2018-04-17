@@ -27,12 +27,13 @@ public class Thistle {
             update();
             render();
             try {
-                Thread.sleep(10);
+                Thread.sleep(5);
             } catch(InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
+
     private static void create() {
         try {
             tileTypeList = new FileManager().extractTileTypes();
@@ -49,9 +50,11 @@ public class Thistle {
             tiles.add(new Tile('%', new Vec2D(x,y)));
         }*/
     }
+
     private static void update() {
         screenManager.update();
     }
+
     private static void render() {
         screenManager.render();
         screenManager.renderUI();

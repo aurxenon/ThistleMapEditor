@@ -42,7 +42,7 @@ public class Display {
             Vec2D tileLocation = Thistle.getCamera().getCameraCoords(tile);
 
             screen.setCharacter(tileLocation.getX(), tileLocation.getY(), drawCharacter);
-            screen.refresh();
+            refresh();
             Thistle.getTerminal().flush();
         }catch(IOException e) {
             e.printStackTrace();
@@ -55,17 +55,17 @@ public class Display {
             textGraphics.setBackgroundColor(text.getBackgroundColor());
             textGraphics.setForegroundColor(text.getForegroundColor());
             textGraphics.putString(location.getX(), location.getY(), text.getText());
-            screen.refresh();
+            refresh();
             Thistle.getTerminal().flush();
         } catch(IOException e) {
             e.printStackTrace();
         }
     }
-    public void moveCursor(Vec2D cursorPos) {
-        TerminalPosition terminalPosition = cursorPos.getTerminalPosition();
+    public void drawCursor(Cursor cursor) {
+        TerminalPosition terminalPosition = Thistle.getCamera().getCameraCoords(cursor).getTerminalPosition();
         screen.setCursorPosition(terminalPosition);
         try {
-            screen.refresh();
+            refresh();
             Thistle.getTerminal().flush();
         } catch(IOException e) {
             e.printStackTrace();

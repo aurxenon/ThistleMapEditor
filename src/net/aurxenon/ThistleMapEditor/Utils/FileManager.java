@@ -1,6 +1,7 @@
 package net.aurxenon.ThistleMapEditor.Utils;
 
 import com.googlecode.lanterna.TextColor;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.aurxenon.ThistleMapEditor.Display.Tile;
 import net.aurxenon.ThistleMapEditor.Display.TileType;
 import net.aurxenon.ThistleMapEditor.Thistle;
@@ -47,6 +48,11 @@ public class FileManager {
 
             char label = mapTile.attr("label").charAt(0);
 
+            boolean naturalGeneration = Boolean.parseBoolean(mapTile.attr("naturalGeneration").toString());
+
+            double minChance = Double.valueOf(mapTile.attr("minChance").toString());
+            double maxChance = Double.valueOf(mapTile.attr("maxChance").toString());
+
             int foregroundR = Integer.parseInt(mapTile.attr("foregroundR"));
             int foregroundG = Integer.parseInt(mapTile.attr("foregroundG"));
             int foregroundB = Integer.parseInt(mapTile.attr("foregroundB"));
@@ -57,7 +63,7 @@ public class FileManager {
             int backgroundB = Integer.parseInt(mapTile.attr("backgroundB"));
 
             TextColor backgroundColor = new TextColor.RGB(backgroundR, backgroundG, backgroundB);
-            tileTypeList.put(name, new TileType(name, label, foregroundColor, backgroundColor));
+            tileTypeList.put(name, new TileType(name, label, naturalGeneration, minChance, maxChance, foregroundColor, backgroundColor));
         }
         return tileTypeList;
     }
